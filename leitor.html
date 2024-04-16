@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de Cartão Resposta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        #cameraContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #cameraPreview {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            background-color: #eee;
+            display: inline-block;
+        }
+
+        #captureButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #captureButton:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leitor de Cartão Resposta</h1>
+        <div id="cameraContainer">
+            <video id="cameraPreview" autoplay muted></video>
+        </div>
+        <button id="captureButton">Capturar Cartão Resposta</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Função para capturar uma foto da câmera
+        function capturePhoto() {
+            const video = document.getElementById('cameraPreview');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+
+            // Exibir a imagem capturada (apenas para fins de demonstração)
+            const resultContainer = document.getElementById('result');
+            resultContainer.innerHTML = '<img src="' + imageData + '" alt="Imagem Capturada">';
+        }
+
+        // Verificar se a câmera está disponível
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function (stream) {
+                const video = document.getElementById('cameraPreview');
+                video.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('Erro ao acessar a câmera: ', error);
+            });
+
+        // Adicionar evento de clique ao botão de captura
+        document.getElementById('captureButton').addEventListener('click', function () {
+            capturePhoto();
+        });
+    </script>
+</body>
+</html>
